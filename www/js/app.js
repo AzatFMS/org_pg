@@ -1,64 +1,25 @@
-var blogSample = angular.module('blogSample', ['ngRoute','ui.bootstrap']);
+'use strict';
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        
-        console.log("initializing");
-        this.bindEvents();
-        console.log("initializing done");
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);   
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-        navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+function jsonp_callback(data) {
+    // returning from async callbacks is (generally) meaningless
+    console.log(data.found);
+}
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-    },
 
-    onErr: function(error)
-    {
-        alert('Unable to get your location. Without location you will not be able to use navigate feature! Error:' + '\n' + error.message);
-    },
-
-    onSuccess: function(position)
-    {
-        blogSample.latitude = position.coords.latitude;
-        blogSample.longitude = position.coords.longitude;
-    }
-};
+// Declare app level module which depends on filters, and services
+var myApp = angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives','ajoslin.mobile-navigate','ngMobile'])
+    .config(function ($compileProvider){
+        $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+    })
+    .config(['$routeProvider', function($routeProvider) {
+        $routeProvider.when('/', {templateUrl: 'partials/homeView.html', controller: 'HomeCtrl'});
+        $routeProvider.when('/view1', {templateUrl: 'partials/notificationView.html'});
+        $routeProvider.when('/view2', {templateUrl: 'partials/geolocationView.html'});
+        $routeProvider.when('/view3', {templateUrl: 'partials/accelerometerView.html'});
+        $routeProvider.when('/view4', {templateUrl: 'partials/deviceInfoView.html'});
+        $routeProvider.when('/view5', {templateUrl: 'partials/cameraView.html'});
+        $routeProvider.when('/view6', {templateUrl: 'partials/contactsView.html'});
+        $routeProvider.when('/view7', {templateUrl: 'partials/compassView.html'});
+        $routeProvider.when('/view8', {templateUrl: 'partials/hackerNewsView.html'});
+        $routeProvider.otherwise({redirectTo: '/'});
+  }]);
